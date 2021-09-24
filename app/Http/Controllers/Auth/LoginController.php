@@ -4,7 +4,6 @@ namespace App\Http\Controllers\Auth;
 
 use App\Http\Controllers\Controller;
 use App\Models\User;
-use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Laravel\Socialite\Facades\Socialite;
 
@@ -29,8 +28,45 @@ class LoginController extends Controller
 	{
 		$data = Socialite::driver('github')->user();
 
-		if ($email = $data->getEmail()) {
-			$user = User::getUserByEmail($email);
+		if ($user = User::getUserByEmail($data->getEmail())) {
+			Auth::login($user, true);
+
+			return redirect()->route('dashboard');
+		}
+
+		$newUser = User::create([
+			'name' => $data->getName(),
+			'nickname' => $data->getNickname(),
+			'email' => $data->getEmail(),
+			'provider_id' => $data->getId(),
+			'profile_photo_path' => $data->getAvatar(),
+		]);
+
+		Auth::login($newUser, true);
+
+		return redirect()->route('dashboard');
+	}
+
+	/**
+	 * Redirect the user to the Google authentication page.
+	 *
+	 * @return \Illuminate\Http\Response
+	 */
+	public function redirectToGoogle()
+	{
+		return Socialite::driver('google')->redirect();
+	}
+
+	/**
+	 * Obtain the user information from Google.
+	 *
+	 * @return \Illuminate\Http\Response
+	 */
+	public function handleGoogleCallback()
+	{
+		$data = Socialite::driver('google')->user();
+
+		if ($user = User::getUserByEmail($data->getEmail())) {
 			Auth::login($user, true);
 
 			return redirect()->route('dashboard');
