@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\Auth\LoginController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -20,3 +21,9 @@ Route::get('/', function () {
 Route::middleware(['auth:sanctum', 'verified'])->get('/dashboard', function () {
     return view('dashboard');
 })->name('dashboard');
+
+Route::name('github.')->group(function () {
+	Route::get('/auth/redirect', [LoginController::class, 'redirectToGitHub'])->name('login');
+	Route::get('/auth/callback',  [LoginController::class, 'handleGitHubCallback'])->name('redirect_callback');
+});
+
