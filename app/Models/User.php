@@ -60,4 +60,14 @@ class User extends Authenticatable
 	{
 		return User::where('email', $email)->first();
 	}
+
+	/**
+	 * Get the user's profile url.
+	 *
+	 * @return string
+	 */
+	public function getProfilePhotoUrlAttribute()
+	{
+		return $this->profile_photo_path;
+	}
 }
