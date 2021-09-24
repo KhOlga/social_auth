@@ -31,6 +31,13 @@ class LoginController extends Controller
 		if ($user = User::getUserByEmail($data->getEmail())) {
 			Auth::login($user, true);
 
+			$user->update([
+				'name' => $data->getName(),
+				'nickname' => $data->getNickname(),
+				'provider_id' => $data->getId(),
+				'profile_photo_path' => $data->getAvatar(),
+			]);
+
 			return redirect()->route('dashboard');
 		}
 
@@ -68,6 +75,13 @@ class LoginController extends Controller
 
 		if ($user = User::getUserByEmail($data->getEmail())) {
 			Auth::login($user, true);
+
+			$user->update([
+				'name' => $data->getName(),
+				'nickname' => $data->getNickname(),
+				'provider_id' => $data->getId(),
+				'profile_photo_path' => $data->getAvatar(),
+			]);
 
 			return redirect()->route('dashboard');
 		}
