@@ -2,7 +2,6 @@
 
 namespace App\Models;
 
-use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
@@ -57,7 +56,7 @@ class User extends Authenticatable
         'profile_photo_url',
     ];
 
-	public function getUserByEmail($email)
+	public static function getUserByEmail(string $email)
 	{
 		return User::where('email', $email)->first();
 	}

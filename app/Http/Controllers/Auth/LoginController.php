@@ -29,8 +29,7 @@ class LoginController extends Controller
 	{
 		$data = Socialite::driver('github')->user();
 
-		if ($email = $data->getEmail()) {
-			$user = User::getUserByEmail($email);
+		if ($user = User::getUserByEmail($data->getEmail())) {
 			Auth::login($user, true);
 
 			return redirect()->route('dashboard');
