@@ -29,7 +29,14 @@ class LoginController extends Controller
 	{
 		$data = Socialite::driver('github')->user();
 
-		$user = User::create([
+		if ($email = $data->getEmail()) {
+			$user = User::getUserByEmail($email);
+			Auth::login($user, true);
+
+			return redirect()->route('dashboard');
+		}
+
+		$newUser = User::create([
 			'name' => $data->getName(),
 			'nickname' => $data->getNickname(),
 			'email' => $data->getEmail(),
@@ -37,7 +44,7 @@ class LoginController extends Controller
 			'profile_photo_path' => $data->getAvatar(),
 		]);
 
-		auth()->login($user, true);
+		Auth::login($newUser, true);
 
 		return redirect()->route('dashboard');
 	}
