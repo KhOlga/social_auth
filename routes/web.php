@@ -22,8 +22,17 @@ Route::middleware(['auth:sanctum', 'verified'])->get('/dashboard', function () {
     return view('dashboard');
 })->name('dashboard');
 
-Route::name('github.')->group(function () {
-	Route::get('/auth/redirect', [LoginController::class, 'redirectToGitHub'])->name('login');
-	Route::get('/auth/callback',  [LoginController::class, 'handleGitHubCallback'])->name('redirect_callback');
+Route::group(['prefix' => 'github', 'as' => 'github.'], function () {
+	Route::group(['prefix' => 'auth', 'as' => 'auth.'], function () {
+		Route::get('redirect', [LoginController::class, 'redirectToGitHub'])->name('login');
+		Route::get('callback', [LoginController::class, 'handleGitHubCallback'])->name('redirect_callback');
+	});
+});
+
+Route::group(['prefix' => 'google', 'as' => 'google.'], function () {
+	Route::group(['prefix' => 'auth', 'as' => 'auth.'], function () {
+		Route::get('redirect', [LoginController::class, 'redirectToGoogle'])->name('login');
+		Route::get('callback', [LoginController::class, 'handleGoogleCallback'])->name('redirect_callback');
+	});
 });
 

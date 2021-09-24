@@ -56,7 +56,7 @@ class User extends Authenticatable
         'profile_photo_url',
     ];
 
-	public static function getUserByEmail(string $email)
+	public static function getUserByEmail($email)
 	{
 		return User::where('email', $email)->first();
 	}
